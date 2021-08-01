@@ -30,6 +30,6 @@ USER app
 COPY --from=build /build/libs/ /usr/local/lib/python3.8/site-packages/
 
 ENV PYTHONOPTIMIZE=2
-EXPOSE 8080
+EXPOSE 8000
 ENTRYPOINT ["python"]
 CMD ["-m", "echo"]

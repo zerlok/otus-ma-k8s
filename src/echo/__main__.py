@@ -47,7 +47,7 @@ def main(args: t.Sequence[str]) -> int:
 
     web.run_app(
         app=app,
-        port=int(os.getenv("HTTP_PORT", 8080)),
+        port=int(os.getenv("HTTP_PORT", 8000)),
         print=print_nothing,
     )
 
