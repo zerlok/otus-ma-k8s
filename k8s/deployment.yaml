@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: echo-deployment
+  name: echo-app
 spec:
   replicas: 2
   selector:
@@ -16,5 +16,5 @@ spec:
         - name: echo
           image: zerlok/otus-ma-k8s-python-echo:0.1.0
           ports:
-            - containerPort: 8080
-              name: service
+            - name: http
+              containerPort: 8080
