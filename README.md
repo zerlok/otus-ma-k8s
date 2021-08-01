@@ -1,2 +1,49 @@
-# otus-ma-k8s
-OTUS microservice architecture course kubernetes lessons
+# otus-ma-k8s-homework
+
+OTUS microservice architecture course kubernetes homework
+
+## Задание №1
+
+Создать минимальный сервис, который
+
+* отвечает на порту 8000
+* имеет http-метод GET /health/ RESPONSE: {"status": "OK"}
+* Cобрать локально образ приложения в докер. Запушить образ в dockerhub
+* Написать манифесты для деплоя в k8s для этого сервиса.
+* Манифесты должны описывать сущности Deployment, Service, Ingress. В Deployment могут быть указаны Liveness, Readiness
+  пробы. Количество реплик должно быть не меньше 2. Image контейнера должен быть указан с Dockerhub.
+* Хост в ингрессе должен быть arch.homework. В итоге после применения манифестов GET запрос
+  на http://arch.homework/health должен отдавать {“status”: “OK”}.
+
+На выходе предоставить
+
+* ссылку на github c манифестами. Манифесты должны лежать в одной директории, так чтобы можно было их все применить
+  одной командой kubectl apply -f .
+* url, по которому можно будет получить ответ от сервиса (либо тест в postmanе).
+
+## Задание со звездой* (+5 баллов)
+
+* В Ingress-е должно быть правило, которое форвардит все запросы с /otusapp/{student name}/* на сервис с rewrite-ом
+  пути. Где {student name} - это имя студента.
+
+## Проделанная работа
+
+### Стэк
+
+* python
+* poetry
+* aiohttp
+
+### Описание сервиса
+
+* создан http-сервис `echo`, который
+  * запускается на порту `8000`
+  * отдает информацию о запросе на эндпоинте `/` (запрос -- в теле ожидается любой корректный JSON, либо пустое тело и
+    любой набор заголовков; ответ в JSON формате -- JSON тело и набор заголовков)
+  * отдает статус о сервисе на эндпоинте `/health`
+* создан docker образ `echo` сервиса и выложен
+  на [docker hub](https://hub.docker.com/repository/docker/zerlok/otus-ma-k8s-python-echo)
+
+### Примеры запросов
+
+См. файл [send-request.sh](./send-request.sh)
