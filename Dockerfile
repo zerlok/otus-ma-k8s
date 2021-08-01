@@ -17,6 +17,9 @@ RUN apk add --no-cache \
     source $HOME/.cargo/env && \
     pip install poetry==1.1.7
 
+RUN adduser -D -h /build/ app
+USER app
+
 COPY pyproject.toml poetry.lock src/ ./
 RUN poetry build -n && \
     pip install --target /build/libs/ dist/*.whl
