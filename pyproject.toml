@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ma-k8s"
+name = "echo"
 version = "0.1.0"
 description = ""
 authors = ["zerlok"]

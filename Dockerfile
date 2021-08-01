@@ -2,25 +2,34 @@ ARG BASE_IMAGE=python:3.8-alpine3.13
 
 FROM $BASE_IMAGE AS build
 
-WORKDIR src
+WORKDIR /build/
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
 
-RUN apk add --no-cache gcc g++
+RUN apk add --no-cache \
+        curl \
+        gcc \
+        g++ \
+        libressl-dev \
+        musl-dev \
+        libffi-dev && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal && \
+    source $HOME/.cargo/env && \
+    pip install poetry==1.1.7
 
-# TODO: use poetry build tool
-COPY requirements.txt ./
-RUN pip install -r requirements.txt --target /build/
+COPY pyproject.toml poetry.lock src/ ./
+RUN poetry build -n && \
+    pip install --target /build/libs/ dist/*.whl
+
 
 FROM $BASE_IMAGE AS main
 
-WORKDIR src
-
-RUN adduser -DH app && chown -R app:app /src/
+RUN adduser -DH app
 USER app
 
-COPY --from=build /build/ /build/
-COPY src ./
+COPY --from=build /build/libs/ /usr/local/lib/python3.8/site-packages/
 
-ENV PYTHONPATH=/build/
+ENV PYTHONOPTIMIZE=2
 EXPOSE 8080
 ENTRYPOINT ["python"]
 CMD ["-m", "echo"]
